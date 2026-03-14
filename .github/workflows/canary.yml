@@ -37,4 +37,4 @@ jobs:
         run: sh scripts/publish-prerelease.sh
         env:
           REGISTRY_AUTH_TOKEN: ${{ secrets.PUBLISH_CANARY_VERDACCIO_TOKEN }}
-          REGISTRY_URL: ${{ vars.CANARY_REGISTRY }}
+          REGISTRY_URL: rg.verdaccio.org
