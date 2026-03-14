@@ -1,0 +1,8 @@
+src/
+.github/
+scripts/
+.yarn/
+.nvmrc
+.yarnrc.yml
+tsconfig.json
+vitest.config.*
