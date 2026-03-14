@@ -28,7 +28,8 @@ jobs:
       - name: Test
         run: yarn test
 
-      - name: Publish canary to canary registry
-        run: npm publish --access public --tag canary --registry https://rg.verdaccio.org
+      - name: Publish
+        run: sh scripts/publish-prerelease.sh
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.PUBLISH_CANARY_VERDACCIO_TOKEN }}
+          REGISTRY_AUTH_TOKEN: ${{ secrets.VERDACCIO_REGISTRY_TOKEN_CANARY }}
+          REGISTRY_URL: ${{ values.CANARY_REGISTRY }}
