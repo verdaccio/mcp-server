@@ -32,7 +32,7 @@ jobs:
       - name: Bump up package
         run: npm version prerelease --no-git-tag-version --preid ${{ env.sha_short }}   
       - name: Publish
-        run: sh scripts/publish-prerelease.sh
+        run: bash scripts/publish-prerelease.sh
         env:
           REGISTRY_AUTH_TOKEN: ${{ secrets.PUBLISH_CANARY_VERDACCIO_TOKEN }}
           REGISTRY_URL: rg.verdaccio.org
