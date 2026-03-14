@@ -1,0 +1,33 @@
+name: Canary
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Build
+        run: yarn build
+
+      - name: Test
+        run: yarn test
+
+      - name: Publish canary to registry.verdaccio.org
+        run: yarn npm publish --access public --tag canary
+        env:
+          YARN_NPM_PUBLISH_REGISTRY: ${{ vars.CANARY_REGISTRY }}
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.PUBLISH_CANARY_VERDACCIO_TOKEN }}
