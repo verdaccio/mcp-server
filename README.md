@@ -19,6 +19,63 @@ API endpoint paths are sourced directly from `@verdaccio/middleware` constants (
 | [Continue.dev](https://continue.dev) | `~/.continue/config.json` |
 | Any custom app | [MCP SDK](https://modelcontextprotocol.io/sdks) |
 
+## Installation
+
+```bash
+# npm
+npm install -g @verdaccio/mcp-server
+
+# yarn
+yarn global add @verdaccio/mcp-server
+
+# or run without installing via npx / yarn dlx
+npx @verdaccio/mcp-server
+yarn dlx @verdaccio/mcp-server
+```
+
+## Using with Claude
+
+### Claude Code (CLI)
+
+The quickest way is via the `claude mcp add` command:
+
+```bash
+# Local scope (current project only)
+claude mcp add verdaccio -e VERDACCIO_URL=http://your-verdaccio:4873 -- npx @verdaccio/mcp-server
+
+# User scope (all projects)
+claude mcp add -s user verdaccio -e VERDACCIO_URL=http://your-verdaccio:4873 -- npx @verdaccio/mcp-server
+
+# With auth token
+claude mcp add verdaccio \
+  -e VERDACCIO_URL=http://your-verdaccio:4873 \
+  -e VERDACCIO_TOKEN=your-token \
+  -- npx @verdaccio/mcp-server
+```
+
+### Claude Desktop
+
+Add to `~/.claude.json`:
+
+```json
+{
+  "mcpServers": {
+    "verdaccio": {
+      "command": "npx",
+      "args": ["@verdaccio/mcp-server"],
+      "env": {
+        "VERDACCIO_URL": "http://your-verdaccio:4873",
+        "VERDACCIO_TOKEN": "your-token"
+      }
+    }
+  }
+}
+```
+
+Restart Claude after adding the config. You can verify the server is connected by asking:
+
+> _"What tools do you have available for Verdaccio?"_
+
 ## Tools
 
 ### `find_package`
