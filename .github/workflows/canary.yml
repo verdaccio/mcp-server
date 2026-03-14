@@ -32,4 +32,4 @@ jobs:
         run: sh scripts/publish-prerelease.sh
         env:
           REGISTRY_AUTH_TOKEN: ${{ secrets.VERDACCIO_REGISTRY_TOKEN_CANARY }}
-          REGISTRY_URL: ${{ values.CANARY_REGISTRY }}
+          REGISTRY_URL: ${{ vars.CANARY_REGISTRY }}
