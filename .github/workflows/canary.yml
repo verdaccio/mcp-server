@@ -30,6 +30,6 @@ jobs:
         run: yarn test
 
       - name: Publish canary to canary registry
-        run: npm publish --access public --tag canary
+        run: npm publish --access public --tag canary --registry ${{ vars.CANARY_REGISTRY }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.PUBLISH_CANARY_VERDACCIO_TOKEN }}
