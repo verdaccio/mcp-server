@@ -15,6 +15,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
+          registry-url: ${{ vars.CANARY_REGISTRY }}
 
       - name: Enable Corepack
         run: npm i -g corepack
@@ -28,8 +29,7 @@ jobs:
       - name: Test
         run: yarn test
 
-      - name: Publish canary to registry.verdaccio.org
-        run: yarn npm publish --access public --tag canary
+      - name: Publish canary to canary registry
+        run: npm publish --access public --tag canary
         env:
-          YARN_NPM_PUBLISH_REGISTRY: ${{ vars.CANARY_REGISTRY }}
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.PUBLISH_CANARY_VERDACCIO_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.PUBLISH_CANARY_VERDACCIO_TOKEN }}
