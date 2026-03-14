@@ -1,0 +1,27 @@
+# Build output
+dist/
+
+# Dependencies
+node_modules/
+
+# Yarn
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# Claude
+.claude/
+
+# Environment
+.env
+.env.*
+
+# Editor
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

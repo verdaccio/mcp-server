@@ -1,0 +1,37 @@
+name: Canary
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    if: github.actor == 'juanpicado'
+
+    steps:
+      - uses: actions/checkout@6.0.2
+
+      - uses: actions/setup-node@6.0.2
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Declare some variables
+        shell: bash
+        run: |
+          echo "sha_short=$(git rev-parse --short "$GITHUB_SHA")" >> "$GITHUB_ENV"
+      - name: Bump up package
+        run: npm version prerelease --no-git-tag-version --preid ${{ env.sha_short }}
+      - name: Publish
+        run: bash scripts/publish-prerelease.sh
+        env:
+          REGISTRY_AUTH_TOKEN: ${{ secrets.PUBLISH_CANARY_VERDACCIO_TOKEN }}
+          REGISTRY_URL: rg.verdaccio.org
