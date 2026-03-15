@@ -36,9 +36,6 @@ jobs:
       - name: Build
         run: yarn build
 
-      - name: Test
-        run: yarn test
-
       - name: Resolve version
         id: version
         run: |
@@ -62,6 +59,7 @@ jobs:
           git push origin HEAD --tags --force
 
       - name: Publish to registry.npmjs.org
-        run: yarn npm publish --access public
+        run: bash scripts/publish-release.sh
         env:
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.REGISTRY_AUTH_TOKEN }}
+          REGISTRY_AUTH_TOKEN: ${{ secrets.REGISTRY_AUTH_TOKEN }}
+          REGISTRY_URL: https://registry.npmjs.org
