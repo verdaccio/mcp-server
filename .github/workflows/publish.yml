@@ -17,7 +17,7 @@ jobs:
     if: github.actor == 'juanpicado'
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           # Need full history and push access for the version commit
           fetch-depth: 0
