@@ -16,7 +16,7 @@ export function registerAuthTools(server: McpServer): void {
       },
     },
     async ({ username, password }) => {
-      const url = resolveEndpoint(USER_API_ENDPOINTS.add_user, {
+      const url = await resolveEndpoint(USER_API_ENDPOINTS.add_user, {
         org_couchdb_user: `org.couchdb.user:${username}`,
       });
 

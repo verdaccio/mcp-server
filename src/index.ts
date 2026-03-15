@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { registerRegistryTools } from "./tools/registry.js";
 import { registerPackageTools } from "./tools/packages.js";
 import { registerAuthTools } from "./tools/auth.js";
 import { registerProfileTools } from "./tools/profile.js";
@@ -12,6 +13,7 @@ const server = new McpServer({
   version: "1.0.0",
 });
 
+registerRegistryTools(server);
 registerPackageTools(server);
 registerAuthTools(server);
 registerProfileTools(server);

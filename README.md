@@ -73,6 +73,16 @@ Restart Claude after adding the config. You can verify the server is connected b
 
 ## Tools
 
+### `start_registry`
+
+Start the Verdaccio registry and return its URL. When no `VERDACCIO_URL` is configured, an embedded registry is started automatically on a random local port with temporary storage.
+
+No parameters required.
+
+**Example prompt:** _"Start a local Verdaccio registry so I can publish packages"_
+
+---
+
 ### `find_package`
 
 Search for packages in the registry by name or keyword.

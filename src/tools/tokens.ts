@@ -12,7 +12,7 @@ export function registerTokenTools(server: McpServer): void {
         "List all API tokens for the currently authenticated user in Verdaccio",
     },
     async () => {
-      const url = resolveEndpoint(TOKEN_API_ENDPOINTS.get_tokens);
+      const url = await resolveEndpoint(TOKEN_API_ENDPOINTS.get_tokens);
       const response = await fetch(url, { headers: buildHeaders() });
 
       if (!response.ok) {
@@ -86,7 +86,7 @@ export function registerTokenTools(server: McpServer): void {
       },
     },
     async ({ password, readonly = false, cidr }) => {
-      const url = resolveEndpoint(TOKEN_API_ENDPOINTS.get_tokens);
+      const url = await resolveEndpoint(TOKEN_API_ENDPOINTS.get_tokens);
 
       const response = await fetch(url, {
         method: "POST",
@@ -143,7 +143,7 @@ export function registerTokenTools(server: McpServer): void {
       },
     },
     async ({ tokenKey }) => {
-      const url = resolveEndpoint(TOKEN_API_ENDPOINTS.delete_token, {
+      const url = await resolveEndpoint(TOKEN_API_ENDPOINTS.delete_token, {
         tokenKey,
       });
 

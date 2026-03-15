@@ -11,7 +11,7 @@ export function registerProfileTools(server: McpServer): void {
         "Get the profile of the currently authenticated user in Verdaccio",
     },
     async () => {
-      const url = resolveEndpoint(PROFILE_API_ENDPOINTS.get_profile);
+      const url = await resolveEndpoint(PROFILE_API_ENDPOINTS.get_profile);
       const response = await fetch(url, { headers: buildHeaders() });
 
       if (!response.ok) {

@@ -22,7 +22,7 @@ export function registerPackageTools(server: McpServer): void {
       },
     },
     async ({ query, size = 20 }) => {
-      const base = resolveEndpoint(SEARCH_API_ENDPOINTS.search);
+      const base = await resolveEndpoint(SEARCH_API_ENDPOINTS.search);
       const url = `${base}?text=${encodeURIComponent(query)}&size=${size}`;
 
       const response = await fetch(url, { headers: buildHeaders() });
@@ -99,7 +99,7 @@ export function registerPackageTools(server: McpServer): void {
       const params: Record<string, string> = { package: pkg };
       if (version) params.version = version;
 
-      const url = resolveEndpoint(
+      const url = await resolveEndpoint(
         PACKAGE_API_ENDPOINTS.get_package_by_version,
         params
       );

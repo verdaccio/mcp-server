@@ -24,6 +24,7 @@
     "@modelcontextprotocol/sdk": "^1.27.1",
     "@verdaccio/middleware": "^9.0.0-next-9.1",
     "@verdaccio/test-helper": "^5.0.0-next-9.1",
+    "verdaccio": "^6.3.2",
     "zod": "^4.3.6"
   },
   "devDependencies": {

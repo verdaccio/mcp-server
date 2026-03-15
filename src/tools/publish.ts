@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { generatePackageMetadata } from "@verdaccio/test-helper";
 import { z } from "zod";
-import { buildHeaders, VERDACCIO_URL } from "../client.js";
+import { buildHeaders, getRegistryUrl } from "../client.js";
 
 export function registerPublishTools(server: McpServer): void {
   // PUBLISH_API_ENDPOINTS.add_package → "/:package"
@@ -26,7 +26,7 @@ export function registerPublishTools(server: McpServer): void {
 
       // Encode scoped package name for URL: @scope/name → @scope%2Fname
       const encodedName = name.replace("/", "%2F");
-      const url = `${VERDACCIO_URL}/${encodedName}`;
+      const url = `${await getRegistryUrl()}/${encodedName}`;
 
       const response = await fetch(url, {
         method: "PUT",
