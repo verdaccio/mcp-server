@@ -1,6 +1,6 @@
 {
   "name": "@verdaccio/mcp-server",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "MCP server for Verdaccio private npm registry",
   "type": "module",
   "main": "dist/index.js",
