@@ -172,6 +172,10 @@ Delete an API token by its key.
 
 Uses endpoint: `TOKEN_API_ENDPOINTS.delete_token` → `/-/npm/v1/tokens/token/:tokenKey`
 
+## Example
+
+![example](assets/example.png)
+
 ## Setup
 
 ### 1. Install and build
