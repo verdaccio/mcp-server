@@ -8,31 +8,39 @@
     "verdaccio-mcp": "dist/index.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "!dist/tests"
   ],
   "scripts": {
     "build": "tsc",
     "dev": "tsx src/index.ts",
     "start": "node dist/index.js",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "changeset": "changeset",
+    "changeset:check": "changeset status --since=origin/main",
+    "ci:version": "changeset version && pnpm install --no-frozen-lockfile",
+    "ci:publish": "changeset publish"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.27.1",
-    "@verdaccio/middleware": "^9.0.0-next-9.1",
-    "@verdaccio/test-helper": "^5.0.0-next-9.1",
-    "verdaccio": "^6.3.2",
-    "zod": "^4.3.6"
+    "@modelcontextprotocol/sdk": "1.32.1",
+    "@verdaccio/middleware": "9.0.0-next-9.35",
+    "@verdaccio/test-helper": "5.0.0-next-9.36",
+    "semver": "7.8.5",
+    "verdaccio": "6.10.5",
+    "zod": "4.6.5"
   },
   "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "^25.4.0",
-    "tsx": "^4.21.0",
-    "typescript": "^5.9.3",
-    "vitest": "^4.1.0"
+    "@changesets/cli": "3.0.3",
+    "@types/node": "26.6.4",
+    "@types/semver": "7.8.0",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2",
+    "vite": "8.3.4",
+    "vitest": "5.0.3"
   },
-  "packageManager": "npm@10.9.4"
+  "packageManager": "pnpm@12.3.4+sha512.961aa41fb077da3a04a441d9f8e15ebc0c96da8ef710b2eb67bf9ee7cb0610eabd48f1fd85f51cffe73846785fa0f87c56a3a872a1d893f8446741b5cce45457"
 }

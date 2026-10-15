@@ -219,8 +219,8 @@ Uses endpoint: `TOKEN_API_ENDPOINTS.delete_token` → `/-/npm/v1/tokens/token/:t
 ### 1. Install and build
 
 ```bash
-yarn install
-yarn build
+pnpm install
+pnpm build
 ```
 
 ### 2. Configure environment
@@ -255,7 +255,7 @@ The server config format is the same across all clients — only the config file
 
 To connect your MCP client to the local source without publishing to npm, point it directly at the local file.
 
-**Option A — compiled (requires `yarn build` after each change):**
+**Option A — compiled (requires `pnpm build` after each change):**
 
 ```json
 {
@@ -293,16 +293,20 @@ With option B, just save your changes and restart the MCP client — no build st
 
 ```bash
 # Run directly with tsx (no build step)
-VERDACCIO_URL=http://localhost:4873 yarn dev
+VERDACCIO_URL=http://localhost:4873 pnpm dev
 
 # Build and run compiled output
-yarn build
-yarn start
+pnpm build
+pnpm start
 
 # Run tests
-yarn test
-yarn test:watch
+pnpm test
+pnpm test:watch
 ```
+
+### Releasing
+
+Add a changeset with `pnpm changeset` in any PR that should be released. Merging to `main` opens a "chore: release" PR; merging that PR publishes to npm.
 
 ## Stack
 
