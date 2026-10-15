@@ -2,14 +2,22 @@ import { getRegistryUrl } from "./registry.js";
 
 export { getRegistryUrl };
 
-const VERDACCIO_TOKEN = process.env.VERDACCIO_TOKEN;
+let storedToken: string | undefined = process.env.VERDACCIO_TOKEN;
+
+export function setToken(token: string): void {
+  storedToken = token;
+}
+
+export function getToken(): string | undefined {
+  return storedToken;
+}
 
 export function buildHeaders(token?: string): HeadersInit {
   const headers: HeadersInit = {
     Accept: "application/json",
     "Content-Type": "application/json",
   };
-  const bearer = token ?? VERDACCIO_TOKEN;
+  const bearer = token ?? storedToken;
   if (bearer) {
     headers["Authorization"] = `Bearer ${bearer}`;
   }
@@ -31,8 +39,10 @@ export async function resolveEndpoint(
     path = path.replace(`:${key}`, encodeURIComponent(value));
   }
 
-  // Remove unfilled optional segments e.g. {/:version}
-  path = path.replace(/\{[^}]*\}/g, "");
+  // Unwrap filled optional segments, drop unfilled ones e.g. {/:version}
+  path = path.replace(/\{([^}]*)\}/g, (_, segment: string) =>
+    segment.includes(":") ? "" : segment
+  );
 
   return `${base}${path}`;
 }
