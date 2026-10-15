@@ -42,7 +42,7 @@ export function registerPackageTools(server: McpServer): void {
         objects: Array<{
           package: {
             name: string;
-            version: string;
+            version?: string;
             description?: string;
             keywords?: string[];
             date?: string;
@@ -59,7 +59,9 @@ export function registerPackageTools(server: McpServer): void {
       }
 
       const results = data.objects.map(({ package: pkg }) => {
-        const lines = [`**${pkg.name}** @ ${pkg.version}`];
+        const lines = [
+          pkg.version ? `**${pkg.name}** @ ${pkg.version}` : `**${pkg.name}**`,
+        ];
         if (pkg.description) lines.push(`  ${pkg.description}`);
         if (pkg.author?.name) lines.push(`  Author: ${pkg.author.name}`);
         if (pkg.keywords?.length)
@@ -115,6 +117,31 @@ export function registerPackageTools(server: McpServer): void {
             },
           ],
         };
+      }
+
+      if (version) {
+        const manifest = (await response.json()) as {
+          name: string;
+          version: string;
+          description?: string;
+          license?: string;
+          dependencies?: Record<string, string>;
+          dist?: { tarball?: string; integrity?: string };
+        };
+        const lines = [`**${manifest.name}@${manifest.version}**`];
+        if (manifest.description)
+          lines.push(`Description: ${manifest.description}`);
+        if (manifest.license) lines.push(`License: ${manifest.license}`);
+        const deps = Object.entries(manifest.dependencies ?? {});
+        if (deps.length)
+          lines.push(
+            `Dependencies: ${deps.map(([n, r]) => `${n}@${r}`).join(", ")}`
+          );
+        if (manifest.dist?.tarball)
+          lines.push(`Tarball: ${manifest.dist.tarball}`);
+        if (manifest.dist?.integrity)
+          lines.push(`Integrity: ${manifest.dist.integrity}`);
+        return { content: [{ type: "text", text: lines.join("\n") }] };
       }
 
       const data = (await response.json()) as {

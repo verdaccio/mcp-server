@@ -1,0 +1,79 @@
+name: Changesets
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
+env:
+  CI: true
+
+jobs:
+  # Open/refresh the "chore: release" version PR from changesets.
+  version:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.repository == 'verdaccio/mcp-server'
+    outputs:
+      has-changesets: ${{ steps.changesets.outputs.has-changesets }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: .nvmrc
+          registry-url: https://registry.npmjs.org
+      - name: Enable corepack
+        run: corepack enable
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build
+        run: pnpm build
+      - name: create versions
+        id: changesets
+        uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
+        with:
+          # A PAT lets the version PR trigger CI; GITHUB_TOKEN does not.
+          github-token: ${{ secrets.CHANGESET_RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+          version-script: pnpm ci:version
+          commit-message: 'chore: release'
+          pr-title: 'chore: release'
+
+  # Publish to npm once the version PR is merged (no changesets left).
+  # Gated by the `npm` environment, which requires manual approval.
+  publish:
+    needs: version
+    if: needs.version.outputs.has-changesets == 'false'
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    environment: npm
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: .nvmrc
+          registry-url: https://registry.npmjs.org
+      - name: Enable corepack
+        run: corepack enable
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build
+        run: pnpm build
+      - name: publish
+        uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
+        with:
+          github-token: ${{ secrets.CHANGESET_RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+          publish-script: pnpm ci:publish
+          create-github-releases: true
+        env:
+          NPM_CONFIG_REGISTRY: https://registry.npmjs.org
+          NPM_CONFIG_PROVENANCE: 'true'

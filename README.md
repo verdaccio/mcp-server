@@ -115,7 +115,7 @@ Uses endpoint: `PACKAGE_API_ENDPOINTS.get_package_by_version` → `/:package{/:v
 
 ### `publish_package`
 
-Publish a package to the registry by name and version. Uses `generatePackageMetadata` from `@verdaccio/test-helper` to generate the full publish payload automatically — no tarball needed.
+Publish a package to the registry by name and version. Checks whether the package already exists and prevents re-publishing an existing version. Uses `generatePackageMetadata` from `@verdaccio/test-helper` to generate the full publish payload automatically — no tarball needed.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -129,9 +129,37 @@ Uses endpoint: `PUBLISH_API_ENDPOINTS.add_package` → `/:package`
 
 ---
 
+### `unpublish_package`
+
+Unpublish a specific version of a package from the registry. Fetches the current metadata, removes the target version, drops dist-tags that pointed at it (moving `latest` to the highest remaining stable version), and deletes the tarball. Unpublishing the last version removes the whole package. This is a 3-step operation (GET → PUT → DELETE) — if the final step fails, metadata may already be updated.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `name` | string | yes | Package name, e.g. `my-lib` or `@scope/my-lib` |
+| `version` | string | yes | Version to unpublish, e.g. `1.0.3` |
+
+**Example prompt:** _"Unpublish version 1.0.3 of @myorg/ui-components from the registry"_
+
+---
+
+### `add_user`
+
+Register a new user in the Verdaccio registry. Returns a Bearer token on success.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `username` | string | yes | Desired username |
+| `password` | string | yes | Desired password |
+
+Uses endpoint: `USER_API_ENDPOINTS.add_user` → `/-/user/:org_couchdb_user`
+
+**Example prompt:** _"Register a new user called jdoe in Verdaccio"_
+
+---
+
 ### `login`
 
-Authenticate with username and password. Returns a Bearer token.
+Authenticate with username and password using Basic auth, so Verdaccio's authenticate branch issues a token. As with `npm login`, if the user does not exist and registration is open, Verdaccio creates it; the tool reports when that happens.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -191,8 +219,8 @@ Uses endpoint: `TOKEN_API_ENDPOINTS.delete_token` → `/-/npm/v1/tokens/token/:t
 ### 1. Install and build
 
 ```bash
-npm install
-npm run build
+pnpm install
+pnpm build
 ```
 
 ### 2. Configure environment
@@ -227,7 +255,7 @@ The server config format is the same across all clients — only the config file
 
 To connect your MCP client to the local source without publishing to npm, point it directly at the local file.
 
-**Option A — compiled (requires `npm run build` after each change):**
+**Option A — compiled (requires `pnpm build` after each change):**
 
 ```json
 {
@@ -265,16 +293,20 @@ With option B, just save your changes and restart the MCP client — no build st
 
 ```bash
 # Run directly with tsx (no build step)
-VERDACCIO_URL=http://localhost:4873 npm run dev
+VERDACCIO_URL=http://localhost:4873 pnpm dev
 
 # Build and run compiled output
-npm run build
-npm start
+pnpm build
+pnpm start
 
 # Run tests
-npm test
-npm run test:watch
+pnpm test
+pnpm test:watch
 ```
+
+### Releasing
+
+Add a changeset with `pnpm changeset` in any PR that should be released. Merging to `main` opens a "chore: release" PR; merging that PR publishes to npm.
 
 ## Stack
 
